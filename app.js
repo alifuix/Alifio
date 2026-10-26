@@ -1400,6 +1400,15 @@ class AlifioApp {
     const qrisInput = document.getElementById('formProductQris');
     const qrisPreview = document.getElementById('formProductQrisPreview');
     const qrisPreviewContainer = document.getElementById('formProductQrisPreviewContainer');
+    const qrisFileInput = document.getElementById('formProductQrisFile');
+    if (qrisFileInput) qrisFileInput.value = '';
+
+    const imgInput = document.getElementById('formProductImage');
+    const imgPreview = document.getElementById('formProductImagePreview');
+    const imgPreviewContainer = document.getElementById('formProductImagePreviewContainer');
+    const imgFileInfo = document.getElementById('formProductImageFileInfo');
+    const imgFileInput = document.getElementById('formProductImageFile');
+    if (imgFileInput) imgFileInput.value = '';
 
     if (editProductId) {
       const prod = this.products.find(p => p.id === editProductId);
@@ -1411,10 +1420,16 @@ class AlifioApp {
         document.getElementById('formOriginalPrice').value = prod.originalPrice || prod.price;
         document.getElementById('formDiscountPrice').value = prod.price;
         document.getElementById('formProductLicense').value = prod.license;
-        document.getElementById('formProductImage').value = prod.image;
         document.getElementById('formProductDesc').value = prod.description;
         document.getElementById('formProductFileUrl').value = prod.fileUrl || '';
         document.getElementById('formProductPopular').checked = Boolean(prod.isPopular);
+
+        // Load Thumbnail Gambar Produk
+        const thumbVal = prod.image || 'assets/patricia_west.jpg';
+        if (imgInput) imgInput.value = thumbVal;
+        if (imgPreview) imgPreview.src = thumbVal;
+        if (imgPreviewContainer) imgPreviewContainer.style.display = 'flex';
+        if (imgFileInfo) imgFileInfo.textContent = 'Thumbnail produk tersimpan';
 
         // Load Barcode QRIS Khusus Produk
         if (qrisInput) qrisInput.value = prod.qrisImage || prod.qrisBarcode || '';
@@ -1428,12 +1443,94 @@ class AlifioApp {
     } else {
       if (modalTitle) modalTitle.textContent = 'Tambah Produk Baru';
       document.getElementById('formProductId').value = '';
-      document.getElementById('formProductImage').value = 'assets/patricia_west.jpg';
+      
+      // Default Preset Thumbnail
+      const defaultImg = 'assets/patricia_west.jpg';
+      if (imgInput) imgInput.value = defaultImg;
+      if (imgPreview) imgPreview.src = defaultImg;
+      if (imgPreviewContainer) imgPreviewContainer.style.display = 'flex';
+      if (imgFileInfo) imgFileInfo.textContent = 'Preset bawaan: Patricia West';
+
       if (qrisInput) qrisInput.value = '';
       if (qrisPreviewContainer) qrisPreviewContainer.style.display = 'none';
     }
 
     modal.classList.add('active');
+  }
+
+  handleProductImageUpload(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Ukuran file gambar thumbnail maksimal 5MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const imgInput = document.getElementById('formProductImage');
+      const imgPreview = document.getElementById('formProductImagePreview');
+      const imgPreviewContainer = document.getElementById('formProductImagePreviewContainer');
+      const imgFileInfo = document.getElementById('formProductImageFileInfo');
+
+      const dataUrl = event.target.result;
+      if (imgInput) imgInput.value = dataUrl;
+      if (imgPreview) imgPreview.src = dataUrl;
+      if (imgPreviewContainer) imgPreviewContainer.style.display = 'flex';
+      if (imgFileInfo) {
+        const sizeKb = (file.size / 1024).toFixed(1);
+        imgFileInfo.textContent = `${file.name} (${sizeKb} KB)`;
+      }
+
+      this.showToast('✅ Gambar thumbnail produk berhasil diunggah!');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  handleProductImageUrlInput(val) {
+    const imgPreview = document.getElementById('formProductImagePreview');
+    const imgPreviewContainer = document.getElementById('formProductImagePreviewContainer');
+    const imgFileInfo = document.getElementById('formProductImageFileInfo');
+
+    const cleanVal = (val || '').trim();
+    if (cleanVal) {
+      if (imgPreview) imgPreview.src = cleanVal;
+      if (imgPreviewContainer) imgPreviewContainer.style.display = 'flex';
+      if (imgFileInfo) imgFileInfo.textContent = cleanVal.startsWith('data:') ? 'File upload lokal' : 'Tautan gambar eksternal';
+    } else {
+      if (imgPreviewContainer) imgPreviewContainer.style.display = 'none';
+    }
+  }
+
+  setProductImagePreset(presetPath) {
+    const imgInput = document.getElementById('formProductImage');
+    const imgPreview = document.getElementById('formProductImagePreview');
+    const imgPreviewContainer = document.getElementById('formProductImagePreviewContainer');
+    const imgFileInfo = document.getElementById('formProductImageFileInfo');
+    const imgFileInput = document.getElementById('formProductImageFile');
+
+    if (imgFileInput) imgFileInput.value = '';
+    if (imgInput) imgInput.value = presetPath;
+    if (imgPreview) imgPreview.src = presetPath;
+    if (imgPreviewContainer) imgPreviewContainer.style.display = 'flex';
+    if (imgFileInfo) imgFileInfo.textContent = `Preset: ${presetPath}`;
+
+    this.showToast('Preset thumbnail dipilih!');
+  }
+
+  removeProductImageUpload() {
+    const imgInput = document.getElementById('formProductImage');
+    const imgFileInput = document.getElementById('formProductImageFile');
+    const imgPreview = document.getElementById('formProductImagePreview');
+    const imgPreviewContainer = document.getElementById('formProductImagePreviewContainer');
+
+    if (imgFileInput) imgFileInput.value = '';
+    if (imgInput) imgInput.value = '';
+    if (imgPreview) imgPreview.src = '';
+    if (imgPreviewContainer) imgPreviewContainer.style.display = 'none';
+
+    this.showToast('Thumbnail dihapus. Silakan unggah gambar atau pilih preset.');
   }
 
   handleProductQrisUpload(e) {
