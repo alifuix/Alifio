@@ -1,0 +1,9 @@
+# Dependencies & Archives
+*.zip
+*.tar.gz
+
+# System & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

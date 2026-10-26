@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alifio — Find Your Design Inspiration & Digital Assets Marketplace</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description"
+    content="Platform marketplace aset desain digital terbaik: 3D Icons, UI Kit, Mockup, Template, dan Font. Dilengkapi pembayaran QRIS instan dan monitoring barang dagangan untuk seller." />
+  <meta name="keywords"
+    content="Alifio, 3D icons, UI assets, design inspiration, digital products, marketplace, QRIS" />
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+  <!-- ====================================================================
+       TOP NAVIGATION BAR
+       ==================================================================== -->
+  <header class="navbar" id="mainNavbar">
+    <div class="container navbar-container">
+
+      <!-- Customizable Brand Logo -->
+      <div class="navbar-brand" onclick="app.switchView('home')" title="Alifio Home">
+        <div class="brand-icon-wrapper" id="brandLogoIconWrapper">
+          <img id="brandLogoImg" src="assets/logo.svg" alt="Alifio" class="brand-logo-img" />
+        </div>
+        <span class="brand-name" id="brandLogoText">Alifio</span>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav>
+        <ul class="navbar-menu">
+          <li><a href="#home" class="nav-link active" data-view="home" data-i18n="nav_home">Home</a></li>
+          <li><a href="#search" class="nav-link" data-view="search" data-i18n="nav_search">Search</a></li>
+          <li><a href="#dashboard" class="nav-link nav-link-seller-only" data-view="dashboard" data-i18n="nav_dashboard">Dashboard</a></li>
+          <li><a href="#analytics" class="nav-link nav-link-seller-only" data-view="analytics" data-i18n="nav_analytics">Analytics</a></li>
+          <li><a href="#settings" class="nav-link nav-link-seller-only" data-view="settings" data-i18n="nav_settings">Settings</a></li>
+        </ul>
+      </nav>
+
+      <!-- Right Actions: Language Switcher & Auth Pill -->
+      <div class="navbar-actions">
+        <!-- Language Switcher Pill [ID | EN] -->
+        <div class="lang-toggle" role="group" aria-label="Language Selector">
+          <button type="button" class="lang-btn active" data-lang="id">ID</button>
+          <button type="button" class="lang-btn" data-lang="en">EN</button>
+        </div>
+
+        <!-- Auth Button / Profile Menu -->
+        <div id="navbarAuthContainer">
+          <button class="btn-auth-pill" onclick="app.openAuthModal('login')">
+            <i class="fa-solid fa-user-circle"></i>
+            <span data-i18n="nav_login">Login / Sign Up</span>
+          </button>
+        </div>
+
+        <!-- Mobile Hamburger Toggle -->
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open Navigation Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Menu Drawer -->
+    <div class="mobile-menu-drawer" id="mobileMenuDrawer">
+      <a href="#home" class="mobile-nav-link active" data-view="home" data-i18n="nav_home">Home</a>
+      <a href="#search" class="mobile-nav-link" data-view="search" data-i18n="nav_search">Search</a>
+      <a href="#dashboard" class="mobile-nav-link mobile-nav-seller-only" data-view="dashboard" data-i18n="nav_dashboard">Dashboard</a>
+      <a href="#analytics" class="mobile-nav-link mobile-nav-seller-only" data-view="analytics" data-i18n="nav_analytics">Analytics</a>
+      <a href="#settings" class="mobile-nav-link mobile-nav-seller-only" data-view="settings" data-i18n="nav_settings">Settings</a>
+    </div>
+  </header>
+
+  <!-- ====================================================================
+       PAGE VIEW: HOME (HERO SKY + POPULAR ITEMS + HOW IT WORKS)
+       ==================================================================== -->
+  <main id="homeViewSections">
+
+    <!-- HERO SECTION (PURE BLUE SKY BACKGROUND MATCHING USER SCREENSHOT) -->
+    <section class="hero-section" id="heroSection">
+      <div class="hero-overlay"></div>
+      <div class="container hero-grid">
+
+        <!-- Left Hero Content -->
+        <div class="hero-content">
+          <h1 class="hero-title">
+            <span data-i18n="hero_title_prefix">Find</span>
+            <span class="badge-group-inline">
+              <span class="badge-round badge-purple">HD</span>
+              <span class="badge-round badge-dark"><i class="fa-solid fa-magnifying-glass"></i></span>
+              <span class="badge-round badge-lavender"><i class="fa-solid fa-star"></i></span>
+            </span>
+            <span data-i18n="hero_title_suffix">Your Design Inspiration</span>
+          </h1>
+
+          <!-- Real-Time Hero Search Bar -->
+          <div class="hero-search-box">
+            <i class="fa-solid fa-magnifying-glass hero-search-icon"></i>
+            <input type="text" id="heroSearchInput" class="hero-search-input" placeholder="What service do you need?"
+              data-i18n="hero_search_placeholder" autocomplete="off" />
+            <button class="hero-search-btn" id="heroSearchBtn" onclick="app.executeHeroSearch()">Book a service</button>
+          </div>
+        </div>
+
+        <!-- Right Hero Widget: "See how it's done" (Opens Video Player Modal) -->
+        <div class="hero-widget-card" onclick="app.openVideoModal()" title="Putar Video Cara Kerja">
+          <div class="widget-bg-circles"></div>
+          <div class="widget-top">
+            <div class="widget-play-btn">
+              <i class="fa-solid fa-video"></i>
+            </div>
+            <div class="widget-arrow-btn">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </div>
+          </div>
+          <div class="widget-text" data-i18n="hero_widget_title">
+            See how it's done
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FEATURED / POPULAR ITEMS SECTION (CURVED SURFACE) -->
+    <section class="featured-section" id="popularSection">
+      <div class="container">
+
+        <div class="featured-header">
+          <div>
+            <span class="badge-featured" data-i18n="featured_badge">DISCOVER</span>
+            <h2 class="featured-title" data-i18n="featured_title">Popular items</h2>
+            <p class="featured-subtitle" data-i18n="featured_subtitle">Everything your design needs.</p>
+          </div>
+          <!-- Button "View all Design" -> Navigates to dedicated Search Page -->
+          <button class="btn-view-all" onclick="app.switchView('search')">
+            <span data-i18n="btn_view_all">View all Design</span>
+            <i class="fa-solid fa-arrow-right" style="font-size: 0.85rem;"></i>
+          </button>
+        </div>
+
+        <!-- 3 Cards Grid: 2 Popular items + 1 Testimonial -->
+        <div class="featured-grid" id="popularItemsGrid">
+          <!-- Populated dynamically by app.js -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION CARA KERJA ALIFIO (HOW IT WORKS - CUSTOMIZABLE IMAGES & TEXT) -->
+    <section class="steps-section" id="stepsSection">
+      <div class="container">
+
+        <span class="steps-badge" data-i18n="steps_badge">SIMPLE STEPS</span>
+        <h2 class="steps-title" data-i18n="steps_title">How It Works</h2>
+        <p class="steps-subtitle" data-i18n="steps_subtitle">A clean path from task to trusted help.</p>
+
+        <!-- Dynamic 3-step cards container -->
+        <div class="steps-grid" id="stepsCardsContainer">
+          <!-- Populated dynamically from this.settings in app.js -->
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================================================================
+       PAGE VIEW: HALAMAN KHUSUS CARI PRODUK & FILTER
+       ==================================================================== -->
+  <section class="search-page-view" id="searchDedicatedView">
+    <div class="container">
+
+      <!-- Search Header & Active Filter Chips Bar -->
+      <div class="search-hero-bar">
+        <div class="search-hero-top">
+          <div>
+            <h1 class="search-hero-title">Eksplorasi & Cari Aset Desain</h1>
+            <p style="font-size: 0.95rem; color: #64748B; margin-top: 4px;">
+              Temukan ikon 3D, template UI, mockup, dan font terbaik untuk kebutuhan proyek Anda.
+            </p>
+          </div>
+          <div class="sort-select-wrapper" style="background: transparent; border: none; padding: 0;">
+            <div class="custom-dropdown" id="sortDropdown">
+              <button type="button" class="dropdown-trigger-btn" id="sortDropdownBtn" onclick="app.toggleSortDropdown()">
+                <i class="fa-solid fa-arrow-down-short-wide dropdown-trigger-icon"></i>
+                <span id="sortDropdownSelectedLabel">Terpopuler</span>
+                <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+              </button>
+              <div class="dropdown-menu" id="sortDropdownMenu">
+                <button type="button" class="dropdown-item active" data-sort="popular" onclick="app.selectSortOption('popular', 'Terpopuler')">
+                  <span class="dropdown-item-left"><i class="fa-solid fa-fire"></i> Terpopuler</span>
+                  <i class="fa-solid fa-check check-icon"></i>
+                </button>
+                <button type="button" class="dropdown-item" data-sort="low" onclick="app.selectSortOption('low', 'Harga: Rendah ke Tinggi')">
+                  <span class="dropdown-item-left"><i class="fa-solid fa-arrow-up-1-9"></i> Harga: Rendah ke Tinggi</span>
+                  <i class="fa-solid fa-check check-icon"></i>
+                </button>
+                <button type="button" class="dropdown-item" data-sort="high" onclick="app.selectSortOption('high', 'Harga: Tinggi ke Rendah')">
+                  <span class="dropdown-item-left"><i class="fa-solid fa-arrow-down-9-1"></i> Harga: Tinggi ke Rendah</span>
+                  <i class="fa-solid fa-check check-icon"></i>
+                </button>
+                <button type="button" class="dropdown-item" data-sort="newest" onclick="app.selectSortOption('newest', 'Terbaru')">
+                  <span class="dropdown-item-left"><i class="fa-solid fa-sparkles"></i> Terbaru</span>
+                  <i class="fa-solid fa-check check-icon"></i>
+                </button>
+              </div>
+            </div>
+            <!-- Hidden native select for backward compatibility -->
+            <select id="dedicatedSortSelect" style="display: none;" onchange="app.setSortBy(this.value)">
+              <option value="popular">Terpopuler</option>
+              <option value="low">Harga: Rendah ke Tinggi</option>
+              <option value="high">Harga: Tinggi ke Rendah</option>
+              <option value="newest">Terbaru</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Search Input Bar in Dedicated Page -->
+        <div class="hero-search-box" style="max-width: 100%; box-shadow: 0 4px 14px rgba(0,0,0,0.06);">
+          <i class="fa-solid fa-magnifying-glass hero-search-icon"></i>
+          <input type="text" id="dedicatedSearchInput" class="hero-search-input"
+            placeholder="Cari nama aset, kategori, atau tag (contoh: 3D Icons, Dashboard, Patricia)..."
+            autocomplete="off" oninput="app.handleDedicatedSearchInput(this.value)" />
+          <button class="hero-search-btn" style="padding: 10px 22px;" onclick="app.resetDedicatedFilters()">
+            <i class="fa-solid fa-arrows-rotate" style="margin-right: 6px;"></i> Reset
+          </button>
+        </div>
+
+        <!-- Active Filter Tags / Chips -->
+        <div class="search-active-chips" id="searchActiveChips">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Main Layout: Left Filter Sidebar + Right Products Grid -->
+      <div class="catalog-layout">
+
+        <!-- Left Filter Sidebar -->
+        <aside class="filters-sidebar">
+
+          <div class="filter-card">
+            <div class="filter-card-header">
+              <h4 class="filter-group-title">Kategori Aset (Subject)</h4>
+              <button type="button" class="btn-reset-filter" onclick="app.resetCategoryFilters()">Reset</button>
+            </div>
+
+            <ul class="filter-checkbox-list">
+              <li class="filter-checkbox-item">
+                <input type="checkbox" id="dCatAll" value="All" checked onchange="app.toggleCategoryFilter('All')" />
+                <label for="dCatAll">Semua Desain</label>
+              </li>
+              <li class="filter-checkbox-item">
+                <input type="checkbox" id="dCat3dIcons" value="3D Icons"
+                  onchange="app.toggleCategoryFilter('3D Icons')" />
+                <label for="dCat3dIcons">3D Icons</label>
+              </li>
+              <li class="filter-checkbox-item">
+                <input type="checkbox" id="dCat3dMockup" value="3D Mockup"
+                  onchange="app.toggleCategoryFilter('3D Mockup')" />
+                <label for="dCat3dMockup">3D Mockup</label>
+              </li>
+              <li class="filter-checkbox-item">
+                <input type="checkbox" id="dCatGraphic" value="Graphic/Visual"
+                  onchange="app.toggleCategoryFilter('Graphic/Visual')" />
+                <label for="dCatGraphic">Graphic/Visual</label>
+              </li>
+              <li class="filter-checkbox-item">
+                <input type="checkbox" id="dCatMockup" value="Mockup" onchange="app.toggleCategoryFilter('Mockup')" />
+                <label for="dCatMockup">Mockup</label>
+              </li>
+              <li class="filter-checkbox-item">
+                <input type="checkbox" id="dCatTemplates" value="Templates"
+                  onchange="app.toggleCategoryFilter('Templates')" />
+                <label for="dCatTemplates">Templates</label>
+              </li>
+              <li class="filter-checkbox-item">
+                <input type="checkbox" id="dCatFonts" value="Fonts" onchange="app.toggleCategoryFilter('Fonts')" />
+                <label for="dCatFonts">Fonts</label>
+              </li>
+            </ul>
+          </div>
+
+          <!-- License Filter Pills -->
+          <div class="filter-card">
+            <div class="filter-card-header">
+              <h4 class="filter-group-title">Lisensi</h4>
+            </div>
+            <div class="license-pill-group">
+              <button type="button" class="license-pill active" data-license="all"
+                onclick="app.setLicenseFilter('all')">Semua</button>
+              <button type="button" class="license-pill" data-license="Premium"
+                onclick="app.setLicenseFilter('Premium')">Premium</button>
+              <button type="button" class="license-pill" data-license="Free"
+                onclick="app.setLicenseFilter('Free')">Gratis</button>
+            </div>
+          </div>
+
+          <!-- Quick Filters: Hanya Diskon & Popular -->
+          <div class="filter-card">
+            <div class="filter-card-header">
+              <h4 class="filter-group-title">Filter Tambahan</h4>
+            </div>
+            <ul class="filter-checkbox-list">
+              <li class="filter-checkbox-item">
+                <input type="checkbox" id="filterOnlyDiscount" onchange="app.toggleDiscountOnly(this.checked)" />
+                <label for="filterOnlyDiscount" style="color: var(--color-danger); font-weight: 700;">Hanya Promo
+                  Diskon</label>
+              </li>
+              <li class="filter-checkbox-item">
+                <input type="checkbox" id="filterOnlyPopular" onchange="app.togglePopularOnly(this.checked)" />
+                <label for="filterOnlyPopular" style="color: var(--color-primary); font-weight: 700;">Hanya Item
+                  Populer</label>
+              </li>
+            </ul>
+          </div>
+
+        </aside>
+
+        <!-- Right Products Grid Container -->
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="font-size: 1.15rem; font-weight: 800; color: var(--color-text-main);">
+              Hasil Pencarian: <span id="dedicatedResultCount" style="color: var(--color-primary);">6 Produk</span>
+            </div>
+          </div>
+
+          <div class="products-grid" id="dedicatedProductsGrid">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       PAGE VIEW: SELLER MONITORING DASHBOARD (LAPTOP & MOBILE)
+       ==================================================================== -->
+  <section class="dashboard-view" id="dashboardView">
+    <div class="container">
+
+      <div class="page-header-row">
+        <div>
+          <h1 class="page-title" data-i18n="dashboard_title">Monitoring Barang Dagangan</h1>
+          <p class="page-subtitle" data-i18n="dashboard_subtitle">Kelola produk, atur diskon, dan pantau performa
+            tokomu.</p>
+        </div>
+        <button class="btn-primary-action" onclick="app.openAddProductModal()">
+          <i class="fa-solid fa-plus"></i>
+          <span data-i18n="btn_add_product">+ Tambah Produk Baru</span>
+        </button>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-cards-grid">
+        <div class="stat-card">
+          <div class="stat-icon-wrapper icon-emerald"><i class="fa-solid fa-wallet"></i></div>
+          <div class="stat-info">
+            <span class="stat-label" data-i18n="stat_total_sales">Total Omset</span>
+            <span class="stat-value" id="statTotalOmset">Rp0</span>
+            <span class="stat-trend"><i class="fa-solid fa-arrow-trend-up"></i> +18.4% bulan ini</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon-wrapper icon-blue"><i class="fa-solid fa-cart-shopping"></i></div>
+          <div class="stat-info">
+            <span class="stat-label" data-i18n="stat_total_orders">Pesanan Berhasil</span>
+            <span class="stat-value" id="statTotalOrders">0</span>
+            <span class="stat-trend"><i class="fa-solid fa-check-circle"></i> 100% lunas QRIS</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon-wrapper icon-purple"><i class="fa-solid fa-box-archive"></i></div>
+          <div class="stat-info">
+            <span class="stat-label" data-i18n="stat_active_products">Produk Aktif</span>
+            <span class="stat-value" id="statActiveProducts">0</span>
+            <span class="stat-trend">Siap jual</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon-wrapper icon-amber"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="stat-info">
+            <span class="stat-label" data-i18n="stat_avg_order">Rata-rata Order</span>
+            <span class="stat-value" id="statAvgOrder">Rp0</span>
+            <span class="stat-trend">AOV Stabil</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Laptop Monitoring Table Card -->
+      <div class="dashboard-table-card">
+        <div class="table-card-header">
+          <h3 class="table-card-title">Daftar Barang Dagangan & Diskon</h3>
+          <div class="table-search-box">
+            <i class="fa-solid fa-magnifying-glass" style="color: #94A3B8;"></i>
+            <input type="text" id="dashboardTableSearch" class="table-search-input"
+              placeholder="Cari barang dagangan..." />
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="alifio-table">
+            <thead>
+              <tr>
+                <th>Produk</th>
+                <th>Kategori</th>
+                <th>Harga & Diskon</th>
+                <th>Popular (Featured)</th>
+                <th>Terjual</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardProductsTbody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       PAGE VIEW: ANALYTICS & MUTASI SALES VIEW
+       ==================================================================== -->
+  <section class="analytics-view" id="analyticsView">
+    <div class="container">
+
+      <div class="page-header-row">
+        <div>
+          <h1 class="page-title" data-i18n="analytics_title">Mutasi Penjualan & Keuangan</h1>
+          <p class="page-subtitle" data-i18n="analytics_subtitle">Cek riwayat transaksi mutasi masuk secara real-time
+            dan analisis grafik omset.</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-auth-pill" onclick="app.exportMutasiCSV()">
+            <i class="fa-solid fa-download"></i>
+            <span data-i18n="btn_export_csv">Export Mutasi CSV</span>
+          </button>
+          <button class="btn-primary-action" onclick="app.switchView('settings')">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span data-i18n="btn_sync_sheet">Sinkron Spreadsheet</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Visual Trend Chart -->
+      <div class="analytics-chart-card">
+        <div class="chart-header">
+          <div>
+            <h3 style="font-size: 1.15rem; font-weight: 700;">Tren Pendapatan Penjualan</h3>
+            <span style="font-size: 0.8rem; color: #64748B;">Total mutasi kredit dari transaksi produk digital</span>
+          </div>
+          <div class="chart-period-tabs">
+            <button class="chart-period-btn active">7 Hari</button>
+            <button class="chart-period-btn">30 Hari</button>
+            <button class="chart-period-btn">Bulan Ini</button>
+          </div>
+        </div>
+        <div class="chart-canvas-container">
+          <canvas id="analyticsChartCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Mutasi Penjualan Table -->
+      <div class="dashboard-table-card">
+        <div class="table-card-header">
+          <h3 class="table-card-title">Buku Mutasi Penjualan Real-Time</h3>
+          <div class="table-search-box">
+            <i class="fa-solid fa-magnifying-glass" style="color: #94A3B8;"></i>
+            <input type="text" id="mutasiTableSearch" class="table-search-input"
+              placeholder="Cari nama pembeli / ID TRX..." />
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="alifio-table">
+            <thead>
+              <tr>
+                <th>ID Transaksi</th>
+                <th>Waktu & Tanggal</th>
+                <th>Nama Produk</th>
+                <th>Pelanggan</th>
+                <th>Metode Bayar</th>
+                <th>Nominal Mutasi</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="analyticsMutasiTbody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       PAGE VIEW: SETTINGS VIEW (UPLOAD QRIS, GANTI LOGO, UBAH CARA KERJA, ETC.)
+       ==================================================================== -->
+  <section class="analytics-view" id="settingsView">
+    <div class="container" style="max-width: 900px;">
+
+      <div class="page-header-row">
+        <div>
+          <h1 class="page-title">Pengaturan Toko & Aset</h1>
+          <p class="page-subtitle">Upload QRIS baru, ganti logo toko, sesuaikan video cara kerja, dan ubah gambar
+            section cara kerja.</p>
+        </div>
+      </div>
+
+      <div class="dashboard-table-card" style="padding: 28px;">
+        <form id="settingsForm" onsubmit="event.preventDefault(); app.saveSettingsFromForm();">
+
+          <!-- SECTION 1: UPLOAD QRIS BARU -->
+          <div
+            style="background-color: #F8FAFC; border: 1.5px solid #BFDBFE; border-radius: var(--radius-lg); padding: 22px; margin-bottom: 28px;">
+            <h3
+              style="font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; color: var(--color-primary); display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-qrcode"></i>
+              <span>1. Upload QRIS Baru (Foto Barcode QRIS Toko)</span>
+            </h3>
+            <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 16px;">
+              Ganti foto barcode QRIS Anda langsung dari perangkat (HP/Laptop) tanpa perlu hosting gambar eksternal.
+            </p>
+
+            <div style="display: grid; grid-template-columns: 140px 1fr; gap: 20px; align-items: center;">
+              <!-- QRIS Preview Thumbnail -->
+              <div style="text-align: center;">
+                <img id="qrisPreviewImg" src="" alt="QRIS Preview"
+                  style="width: 130px; height: 130px; border-radius: 12px; border: 2px solid #CBD5E1; object-fit: contain; background: #FFF; box-shadow: var(--shadow-sm);" />
+                <div style="font-size: 0.725rem; color: #94A3B8; margin-top: 4px;">Foto QRIS Saat Ini</div>
+              </div>
+
+              <!-- Upload Actions -->
+              <div>
+                <input type="file" id="settingQrisFileInput" accept="image/*" style="display: none;"
+                  onchange="app.handleQrisFileUpload(event)" />
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+                  <button type="button" class="btn-primary-action"
+                    onclick="document.getElementById('settingQrisFileInput').click()">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span>Pilih Foto QRIS dari HP / Komputer</span>
+                  </button>
+                  <button type="button" class="btn-auth-pill" onclick="app.resetQrisToDefault()">
+                    Reset ke Default
+                  </button>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label" style="font-size: 0.8rem;">Atau Masukkan URL Gambar QRIS:</label>
+                  <input type="text" id="settingQrisImage" class="form-input" placeholder="https://..."
+                    oninput="document.getElementById('qrisPreviewImg').src = this.value" />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 14px; margin-bottom: 0;">
+              <label class="form-label" style="font-size: 0.8rem;">Nama Merchant / Toko QRIS</label>
+              <input type="text" id="settingMerchantName" class="form-input" placeholder="Contoh: ALIFIO OFFICIAL" />
+            </div>
+          </div>
+
+          <!-- SECTION 2: GANTI LOGO TOKO -->
+          <div
+            style="background-color: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: var(--radius-lg); padding: 22px; margin-bottom: 28px;">
+            <h3
+              style="font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; color: var(--color-dark); display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-palette"></i>
+              <span>2. Kustomisasi Logo Toko</span>
+            </h3>
+            <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 16px;">
+              Ubah logo ikon dan teks brand toko yang tampil di navigasi atas dan footer.
+            </p>
+
+            <div style="display: grid; grid-template-columns: 80px 1fr; gap: 20px; align-items: center;">
+              <!-- Logo Preview -->
+              <div style="text-align: center;">
+                <div
+                  style="width: 70px; height: 70px; border-radius: 16px; background-color: var(--color-dark); display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: var(--shadow-sm); margin: 0 auto;">
+                  <img id="logoPreviewImg" src="assets/logo.svg" alt="Logo"
+                    style="width: 100%; height: 100%; object-fit: cover;" />
+                </div>
+                <div style="font-size: 0.725rem; color: #94A3B8; margin-top: 4px;">Preview Logo</div>
+              </div>
+
+              <!-- Upload Actions & Text -->
+              <div>
+                <input type="file" id="settingLogoFileInput" accept="image/*" style="display: none;"
+                  onchange="app.handleLogoFileUpload(event)" />
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+                  <button type="button" class="btn-auth-pill"
+                    onclick="document.getElementById('settingLogoFileInput').click()">
+                    <i class="fa-solid fa-upload"></i> Upload Logo Baru
+                  </button>
+                  <button type="button" class="btn-auth-pill" onclick="app.resetLogoToDefault()">
+                    Gunakan Logo Default
+                  </button>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label" style="font-size: 0.8rem;">Nama Teks Brand Logo</label>
+                  <input type="text" id="settingLogoText" class="form-input" placeholder="Alifio" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 3: UBAH GAMBAR/VIDEO & TEKS SECTION CARA KERJA (HOW IT WORKS) -->
+          <div
+            style="background-color: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: var(--radius-lg); padding: 22px; margin-bottom: 28px;">
+            <h3
+              style="font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; color: var(--color-dark); display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-photo-film"></i>
+              <span>3. Kustomisasi Media & Teks Section Cara Kerja (3 Langkah)</span>
+            </h3>
+            <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 20px;">
+              Upload <strong>gambar atau video</strong> untuk masing-masing kartu langkah 01, 02, dan 03 di bagian "How It Works".
+            </p>
+
+            <!-- Step 1 Edit -->
+            <div
+              style="background: #FFF; border: 1px solid var(--color-card-border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px;">
+              <div style="font-weight: 800; font-size: 0.95rem; margin-bottom: 10px; color: var(--color-primary);">Langkah 01</div>
+              <!-- Media type toggle -->
+              <div class="step-media-type-toggle">
+                <button type="button" class="step-media-type-btn active" id="step1TypeImg" onclick="app.setStepMediaType(1,'image')">
+                  <i class="fa-solid fa-image"></i> Gambar
+                </button>
+                <button type="button" class="step-media-type-btn" id="step1TypeVid" onclick="app.setStepMediaType(1,'video')">
+                  <i class="fa-solid fa-film"></i> Video
+                </button>
+              </div>
+              <div style="display: grid; grid-template-columns: 100px 1fr; gap: 16px; align-items: start;">
+                <!-- Preview -->
+                <div id="step1MediaPreview" style="width:100px;height:75px;border-radius:8px;overflow:hidden;border:1px solid #CBD5E1;background:#F1F5F9;">
+                  <img id="step1PreviewImg" src="assets/steps.jpg" alt="Step 1" style="width:100%;height:100%;object-fit:cover;" />
+                </div>
+                <div>
+                  <input type="file" id="step1FileInput" accept="image/*" style="display: none;" onchange="app.handleStepFileUpload(1, event)" />
+                  <input type="file" id="step1VideoInput" accept="video/*" style="display: none;" onchange="app.handleStepVideoUpload(1, event)" />
+                  <div class="step-media-upload-area" id="step1UploadArea" onclick="app.triggerStepUpload(1)">
+                    <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                    <div class="upload-label" id="step1UploadLabel">Klik untuk pilih file gambar</div>
+                  </div>
+                  <input type="text" id="settingStep1Title" class="form-input" placeholder="Judul Step 01..." style="margin-bottom: 6px; font-size: 0.85rem;" />
+                  <input type="text" id="settingStep1Desc" class="form-input" placeholder="Deskripsi..." style="font-size: 0.85rem;" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2 Edit -->
+            <div
+              style="background: #FFF; border: 1px solid var(--color-card-border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px;">
+              <div style="font-weight: 800; font-size: 0.95rem; margin-bottom: 10px; color: var(--color-primary);">Langkah 02</div>
+              <div class="step-media-type-toggle">
+                <button type="button" class="step-media-type-btn active" id="step2TypeImg" onclick="app.setStepMediaType(2,'image')">
+                  <i class="fa-solid fa-image"></i> Gambar
+                </button>
+                <button type="button" class="step-media-type-btn" id="step2TypeVid" onclick="app.setStepMediaType(2,'video')">
+                  <i class="fa-solid fa-film"></i> Video
+                </button>
+              </div>
+              <div style="display: grid; grid-template-columns: 100px 1fr; gap: 16px; align-items: start;">
+                <div id="step2MediaPreview" style="width:100px;height:75px;border-radius:8px;overflow:hidden;border:1px solid #CBD5E1;background:#F1F5F9;">
+                  <img id="step2PreviewImg" src="assets/steps.jpg" alt="Step 2" style="width:100%;height:100%;object-fit:cover;" />
+                </div>
+                <div>
+                  <input type="file" id="step2FileInput" accept="image/*" style="display: none;" onchange="app.handleStepFileUpload(2, event)" />
+                  <input type="file" id="step2VideoInput" accept="video/*" style="display: none;" onchange="app.handleStepVideoUpload(2, event)" />
+                  <div class="step-media-upload-area" id="step2UploadArea" onclick="app.triggerStepUpload(2)">
+                    <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                    <div class="upload-label" id="step2UploadLabel">Klik untuk pilih file gambar</div>
+                  </div>
+                  <input type="text" id="settingStep2Title" class="form-input" placeholder="Judul Step 02..." style="margin-bottom: 6px; font-size: 0.85rem;" />
+                  <input type="text" id="settingStep2Desc" class="form-input" placeholder="Deskripsi..." style="font-size: 0.85rem;" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3 Edit -->
+            <div
+              style="background: #FFF; border: 1px solid var(--color-card-border); border-radius: var(--radius-md); padding: 16px;">
+              <div style="font-weight: 800; font-size: 0.95rem; margin-bottom: 10px; color: var(--color-primary);">Langkah 03</div>
+              <div class="step-media-type-toggle">
+                <button type="button" class="step-media-type-btn active" id="step3TypeImg" onclick="app.setStepMediaType(3,'image')">
+                  <i class="fa-solid fa-image"></i> Gambar
+                </button>
+                <button type="button" class="step-media-type-btn" id="step3TypeVid" onclick="app.setStepMediaType(3,'video')">
+                  <i class="fa-solid fa-film"></i> Video
+                </button>
+              </div>
+              <div style="display: grid; grid-template-columns: 100px 1fr; gap: 16px; align-items: start;">
+                <div id="step3MediaPreview" style="width:100px;height:75px;border-radius:8px;overflow:hidden;border:1px solid #CBD5E1;background:#F1F5F9;">
+                  <img id="step3PreviewImg" src="assets/steps.jpg" alt="Step 3" style="width:100%;height:100%;object-fit:cover;" />
+                </div>
+                <div>
+                  <input type="file" id="step3FileInput" accept="image/*" style="display: none;" onchange="app.handleStepFileUpload(3, event)" />
+                  <input type="file" id="step3VideoInput" accept="video/*" style="display: none;" onchange="app.handleStepVideoUpload(3, event)" />
+                  <div class="step-media-upload-area" id="step3UploadArea" onclick="app.triggerStepUpload(3)">
+                    <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                    <div class="upload-label" id="step3UploadLabel">Klik untuk pilih file gambar</div>
+                  </div>
+                  <input type="text" id="settingStep3Title" class="form-input" placeholder="Judul Step 03..." style="margin-bottom: 6px; font-size: 0.85rem;" />
+                  <input type="text" id="settingStep3Desc" class="form-input" placeholder="Deskripsi..." style="font-size: 0.85rem;" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- SECTION 4: KUSTOMISASI VIDEO "LIHAT CARA KERJA" (HERO WIDGET) -->
+          <div
+            style="background-color: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: var(--radius-lg); padding: 22px; margin-bottom: 28px;">
+            <h3
+              style="font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; color: var(--color-dark); display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-circle-play" style="color: var(--color-primary);"></i>
+              <span>4. Video "Lihat Cara Kerja" (Widget Hero Atas)</span>
+            </h3>
+            <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 14px;">
+              Upload file video dari perangkat kamu, atau masukkan link YouTube/MP4. Jika kosong, tampil video animasi demo.
+            </p>
+
+            <!-- Video file upload zone -->
+            <div
+              style="border: 2px dashed #BFDBFE; border-radius: var(--radius-md); padding: 20px; text-align: center; background: #EFF6FF; margin-bottom: 14px; cursor: pointer;"
+              onclick="document.getElementById('heroVideoFileInput').click()">
+              <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--color-primary); margin-bottom: 8px; display: block;"></i>
+              <div style="font-size: 0.88rem; font-weight: 700; color: var(--color-primary);">Klik untuk Upload File Video</div>
+              <div style="font-size: 0.78rem; color: #64748B; margin-top: 4px;">Format didukung: MP4, WebM, MOV &mdash; Maks. sesuai browser</div>
+              <input type="file" id="heroVideoFileInput" accept="video/*" style="display:none;" onchange="app.handleHeroVideoUpload(event)" />
+            </div>
+
+            <!-- Or URL fallback -->
+            <div class="form-group" style="margin-bottom: 10px;">
+              <label class="form-label" style="font-size: 0.8rem;">Atau Masukkan URL Video (YouTube Embed / Link MP4)</label>
+              <input type="url" id="settingVideoUrl" class="form-input"
+                placeholder="https://www.youtube.com/embed/... atau https://.../video.mp4" />
+            </div>
+            <div id="heroVideoCurrentPreview" style="display:none; margin-bottom: 10px;">
+              <video id="heroVideoPreviewEl" controls style="width:100%; max-height:160px; border-radius: var(--radius-md); border:1px solid #CBD5E1;"></video>
+              <button type="button" class="btn-auth-pill" onclick="app.clearHeroVideo()" style="font-size:0.78rem; margin-top: 6px; color: var(--color-danger); border-color: #FECACA;">
+                <i class="fa-solid fa-trash"></i> Hapus Video
+              </button>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" style="font-size: 0.8rem;">Judul Video</label>
+              <input type="text" id="settingVideoTitle" class="form-input"
+                placeholder="Alifio — Cara Membeli & Menjual Aset Desain" />
+            </div>
+          </div>
+
+          <!-- SECTION 5: PLATFORM PEMBAYARAN DINAMIS -->
+          <div
+            style="background-color: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: var(--radius-lg); padding: 22px; margin-bottom: 28px;">
+            <h3
+              style="font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; color: var(--color-dark); display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-link" style="color: #8B5CF6;"></i>
+              <span>5. Platform Pembayaran (Custom & Dinamis)</span>
+            </h3>
+            <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 16px;">
+              Tambah, edit, atau hapus platform pembayaran. Ditampilkan di modal checkout sebagai opsi bayar alternatif.
+            </p>
+            <!-- Dynamic platform list -->
+            <div id="dynamicPlatformsList">
+              <!-- Rendered by app.js -->
+            </div>
+            <button type="button" class="btn-add-platform" onclick="app.addPlatformRow()">
+              <i class="fa-solid fa-plus"></i> Tambah Platform Baru
+            </button>
+          </div>
+
+          <!-- SECTION 6: SELLER APPROVAL (ADMIN ONLY) -->
+          <div
+            style="background-color: #FFFBEB; border: 1.5px solid #FCD34D; border-radius: var(--radius-lg); padding: 22px; margin-bottom: 28px;">
+            <h3
+              style="font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; color: #92400E; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-user-shield" style="color: #D97706;"></i>
+              <span>6. Kelola Persetujuan Seller</span>
+            </h3>
+            <p style="font-size: 0.85rem; color: #78350F; margin-bottom: 16px;">
+              Hanya Admin yang dapat mengizinkan customer menjadi Seller. Akun di bawah ini menunggu persetujuan atau sudah disetujui.
+            </p>
+            <div id="sellerApprovalList">
+              <!-- Rendered by app.js -->
+            </div>
+            <!-- Add email manually -->
+            <div style="display: flex; gap: 10px; margin-top: 12px;">
+              <input type="email" id="approveEmailInput" class="form-input" placeholder="Email customer yang akan dijadikan Seller..." style="font-size:0.85rem;" />
+              <button type="button" class="btn-primary-action" onclick="app.approveSellerByEmail()" style="white-space:nowrap; padding: 10px 18px;">
+                <i class="fa-solid fa-check"></i> Approve
+              </button>
+            </div>
+          </div>
+
+          <!-- SECTION 7: SPREADSHEET INTEGRATION -->
+          <h3
+            style="font-size: 1.15rem; font-weight: 700; margin-top: 14px; margin-bottom: 16px; border-bottom: 1px solid var(--color-card-border); padding-bottom: 10px;">
+            <i class="fa-solid fa-table-cells" style="color: #10B981; margin-right: 8px;"></i>
+            Integrasi Google Spreadsheet (code.gs & setup.gs)
+          </h3>
+
+          <div class="form-group">
+            <label class="form-label">Google Apps Script Web App URL</label>
+            <div style="display: flex; gap: 10px;">
+              <input type="url" id="settingSpreadsheetUrl" class="form-input"
+                placeholder="https://script.google.com/macros/s/.../exec" />
+              <button type="button" class="btn-auth-pill" onclick="app.testSpreadsheetConnection()"
+                style="white-space: nowrap;">
+                <i class="fa-solid fa-plug"></i> Tes Koneksi
+              </button>
+            </div>
+          </div>
+
+          <div style="margin-top: 28px; display: flex; justify-content: flex-end;">
+            <button type="submit" class="btn-primary-action" style="padding: 12px 32px;">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Simpan Semua Pengaturan</span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       FOOTER SECTION
+       ==================================================================== -->
+  <footer class="footer">
+    <div class="footer-watermark">Alifio</div>
+
+    <div class="container">
+
+      <div class="footer-content">
+
+        <!-- Col 1: Brand Info -->
+        <div class="footer-brand">
+          <div class="navbar-brand" onclick="app.switchView('home')">
+            <div class="brand-icon-wrapper">
+              <img id="footerLogoImg" src="assets/logo.svg" alt="Alifio" class="brand-logo-img" />
+            </div>
+            <span class="brand-name" id="footerLogoText">Alifio</span>
+          </div>
+          <p class="footer-tagline" data-i18n="footer_tagline">
+            Platform jual beli aset digital modern, mudah digunakan di HP dan dipantau di laptop.
+          </p>
+        </div>
+
+        <!-- Col 2: Content Pages Links -->
+        <div>
+          <h4 class="footer-col-title">Content Pages</h4>
+          <ul class="footer-links">
+            <li><a class="footer-link" onclick="app.switchView('home')" data-i18n="nav_home">Home</a></li>
+            <li><a class="footer-link" onclick="app.switchView('search')" data-i18n="nav_search">Search</a></li>
+            <li><a class="footer-link" onclick="app.switchView('dashboard')" data-i18n="nav_dashboard">Dashboard</a>
+            </li>
+            <li><a class="footer-link" onclick="app.switchView('analytics')" data-i18n="nav_analytics">Analytics</a>
+            </li>
+            <li><a class="footer-link" onclick="app.switchView('settings')" data-i18n="nav_settings">Settings</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Monitoring Info -->
+        <div>
+          <h4 class="footer-col-title">Seller Hub</h4>
+          <p class="footer-info-text">
+            Built to sell and monitor assets for your business seamlessly. Real-time mutations, custom QRIS, and
+            spreadsheet integration.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Footer Bottom Bar -->
+      <div class="footer-bottom">
+        <div>
+          <span class="status-dot"></span>
+          <span>Download by 2026 • All rights reserved</span>
+        </div>
+        <div>
+          <span>Alifio Digital Asset Ecosystem</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ====================================================================
+       MODAL: VIDEO PLAYER ("SEE HOW IT'S DONE" / "LIHAT CARA KERJA")
+       ==================================================================== -->
+  <div class="modal-overlay" id="videoModal">
+    <div class="modal-container video-modal-container">
+      <div class="modal-header" style="background-color: #0F172A; border-bottom: 1px solid #334155;">
+        <h3 class="modal-title" id="videoModalTitle" style="color: #FFFFFF;">
+          <i class="fa-solid fa-circle-play" style="color: #38BDF8; margin-right: 8px;"></i>
+          Cara Kerja Alifio — Video Walkthrough
+        </h3>
+        <button class="modal-close-btn" style="color: #94A3B8;" onclick="app.closeVideoModal()">&times;</button>
+      </div>
+
+      <!-- Video Player Wrapper -->
+      <div class="video-player-wrapper" id="videoPlayerWrapper">
+        <!-- Interactive Animated Video Stage -->
+        <div class="video-interactive-stage" id="videoStage">
+          <div class="video-scene-badge" id="videoSceneBadge">SCENE 1: DISCOVER ASSETS</div>
+          <div id="videoSceneVisual" style="font-size: 3.5rem; margin-bottom: 16px; color: #38BDF8;">
+            <i class="fa-solid fa-shapes"></i>
+          </div>
+          <h2 class="video-scene-title" id="videoSceneTitle">1. Temukan Aset Pilihanmu</h2>
+          <p class="video-scene-desc" id="videoSceneDesc">
+            Jelajahi ratusan paket 3D Icons, UI Kit, dan Font berkualitas studio dengan pencarian instan dan filter
+            kategori.
+          </p>
+        </div>
+      </div>
+
+      <!-- Video Controls Bar -->
+      <div class="video-controls-bar">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button type="button" id="videoPlayPauseBtn" class="btn-auth-pill" onclick="app.toggleVideoPlayback()"
+            style="background-color: #2563EB; color: #FFF; border: none; padding: 6px 14px; font-size: 0.8rem;">
+            <i class="fa-solid fa-play" id="videoPlayIcon"></i> Putar Video
+          </button>
+          <button type="button" class="btn-auth-pill" onclick="app.restartVideo()"
+            style="background-color: #334155; color: #FFF; border: none; padding: 6px 12px; font-size: 0.8rem;">
+            <i class="fa-solid fa-rotate-left"></i> Ulang
+          </button>
+        </div>
+        <div style="display: flex; gap: 6px;" id="videoScenePillIndicators">
+          <button class="lang-btn active" onclick="app.jumpToVideoScene(0)">1</button>
+          <button class="lang-btn" onclick="app.jumpToVideoScene(1)">2</button>
+          <button class="lang-btn" onclick="app.jumpToVideoScene(2)">3</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODALS: AUTH (LOGIN & REGISTER)
+       ==================================================================== -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title" id="authModalTitle" data-i18n="modal_login_title">Masuk ke Alifio</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Tabs -->
+        <div class="modal-tabs">
+          <button type="button" class="modal-tab-btn active" id="tabLoginBtn" onclick="app.switchAuthTab('login')"
+            data-i18n="tab_login">Masuk</button>
+          <button type="button" class="modal-tab-btn" id="tabSignupBtn" onclick="app.switchAuthTab('signup')"
+            data-i18n="tab_signup">Daftar</button>
+        </div>
+
+        <!-- Mode Masuk: Customer vs Seller (Wajib Terdaftar & Diapprove Admin) -->
+        <div style="background-color: #F8FAFC; border: 1px solid var(--color-card-border); border-radius: var(--radius-md); padding: 12px; margin-bottom: 16px; font-size: 0.825rem;">
+          <div style="font-weight: 700; margin-bottom: 8px; color: #475569;">Pilihan Mode Masuk:</div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn-auth-pill" id="btnRoleCustomer"
+              onclick="app.selectAuthRole('customer')"
+              style="font-size: 0.775rem; padding: 6px 14px; background-color: #EFF6FF; border-color: var(--color-primary); color: var(--color-primary);">
+              <i class="fa-solid fa-user"></i> Sebagai Customer
+            </button>
+            <button type="button" class="btn-auth-pill" id="btnRoleSeller"
+              onclick="app.selectAuthRole('seller')"
+              style="font-size: 0.775rem; padding: 6px 14px; background-color: #FFFFFF; border-color: #CBD5E1; color: #475569;">
+              <i class="fa-solid fa-store"></i> Sebagai Seller/Admin
+            </button>
+          </div>
+          <!-- Notice info khusus Seller -->
+          <div id="authSellerNotice" style="display: none; margin-top: 10px; padding: 10px; background-color: #FEF3C7; border: 1px solid #FCD34D; border-radius: 6px; color: #92400E; font-size: 0.75rem; line-height: 1.45;">
+            <i class="fa-solid fa-shield-halved" style="color: #D97706; margin-right: 4px;"></i>
+            <strong>Akses Seller:</strong> Anda harus memasukkan Email dan Password yang <em>sudah pernah didaftarkan dan disetujui (diapprove) oleh Admin</em>.
+          </div>
+        </div>
+
+        <!-- Hidden input for current role mode -->
+        <input type="hidden" id="loginRoleMode" value="customer" />
+
+        <!-- Login Form -->
+        <form id="loginForm" onsubmit="event.preventDefault(); app.submitLoginForm();">
+          <div class="form-group">
+            <label class="form-label" id="loginEmailLabel">Email Anda</label>
+            <input type="email" id="loginEmail" class="form-input" placeholder="nama@email.com" required
+              value="customer@alifio.com" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required value="123456" />
+          </div>
+          <button type="submit" id="btnSubmitLogin" class="btn-buy-card" style="width: 100%; height: 44px; margin-top: 10px;">
+            <span id="loginSubmitBtnText">Masuk Sekarang</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <!-- Sign Up Form (Default Customer) -->
+        <form id="signupForm" style="display: none;" onsubmit="event.preventDefault(); app.submitSignupForm();">
+          <div class="form-group">
+            <label class="form-label">Nama Lengkap</label>
+            <input type="text" id="regName" class="form-input" placeholder="Nama Anda" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" id="regEmail" class="form-input" placeholder="nama@email.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="regPassword" class="form-input" placeholder="Minimal 6 karakter" required />
+          </div>
+          <p style="font-size: 0.775rem; color: #64748B; margin-bottom: 14px; line-height: 1.4;">
+            Pendaftaran awal sebagai <strong>Customer</strong>. Jika ingin menjual produk, Anda dapat mengajukan akun Seller untuk diverifikasi dan diapprove oleh Admin di panel profil.
+          </p>
+          <button type="submit" class="btn-buy-card" style="width: 100%; height: 44px;">
+            <span>Daftar Akun Baru</span>
+            <i class="fa-solid fa-check"></i>
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL: USER ACCOUNT / PROFILE & BECOME SELLER TOGGLE
+       ==================================================================== -->
+  <div class="modal-overlay" id="accountModal">
+    <div class="modal-container" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="tab_account">Akun Saya</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+
+        <div
+          style="width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(135deg, #3B82F6, #8B5CF6); color: #FFF; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 800; margin: 0 auto 16px;">
+          <i class="fa-solid fa-user"></i>
+        </div>
+
+        <h3 id="accountName" style="font-size: 1.3rem; margin-bottom: 4px;">User Name</h3>
+        <p id="accountEmail" style="font-size: 0.85rem; color: #64748B; margin-bottom: 12px;">user@example.com</p>
+
+        <div>
+          <span id="accountRoleBadge" class="user-role-badge badge-customer">CUSTOMER</span>
+        </div>
+
+        <!-- Role Upgrade Banner -->
+        <div id="accountSellerBanner"
+          style="background-color: #F8FAFC; border: 1px solid var(--color-card-border); border-radius: var(--radius-lg); padding: 18px; margin: 24px 0 16px; text-align: left;">
+          <div
+            style="font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-store" style="color: var(--color-primary);"></i>
+            <span id="accountSellerBannerTitle">Mode Seller (Jual Produk)</span>
+          </div>
+          <p id="accountSellerBannerDesc" style="font-size: 0.8rem; color: #64748B; line-height: 1.5; margin-bottom: 14px;">
+            Untuk menjadi Seller, kamu perlu persetujuan dari Admin. Kirim permintaan di bawah ini.
+          </p>
+          <button type="button" id="accountSellerActionBtn" class="btn-primary-action"
+            style="width: 100%; justify-content: center;">
+            <i class="fa-solid fa-paper-plane"></i> Minta Jadi Seller
+          </button>
+        </div>
+
+        <!-- Tombol Akses Khusus Pemilik Toko / Seller (Admin) -->
+        <div id="accountOwnerLoginPrompt" style="margin: 12px 0;">
+          <button type="button" class="btn-auth-pill" onclick="app.openAuthModal('seller_login', true)"
+            style="width: 100%; justify-content: center; font-size: 0.825rem; padding: 10px 14px; background-color: #EFF6FF; border-color: #93C5FD; color: #1D4ED8; font-weight: 700;">
+            <i class="fa-solid fa-key" style="margin-right: 6px;"></i> Masuk sebagai Owner / Seller (Admin)
+          </button>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 14px;">
+          <button type="button" class="btn-auth-pill" onclick="app.logout()"
+            style="flex: 1; justify-content: center; color: var(--color-danger); border-color: #FECACA;">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span data-i18n="btn_logout">Logout Akun</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL: ADD / EDIT PRODUCT (SELLER)
+       ==================================================================== -->
+  <div class="modal-overlay" id="productFormModal">
+    <div class="modal-container" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="productFormModalTitle">Tambah Produk Baru</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="productManagementForm" onsubmit="event.preventDefault(); app.saveProductFromForm();">
+          <input type="hidden" id="formProductId" />
+
+          <div class="form-group">
+            <label class="form-label">Nama Produk Barang</label>
+            <input type="text" id="formProductTitle" class="form-input"
+              placeholder="Contoh: Patricia West - 3D Character Suite" required />
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">Kategori</label>
+              <select id="formProductCategory" class="form-select">
+                <option value="3D Icons">3D Icons</option>
+                <option value="3D Mockup">3D Mockup</option>
+                <option value="Graphic/Visual">Graphic/Visual</option>
+                <option value="Mockup">Mockup</option>
+                <option value="Templates">Templates</option>
+                <option value="Fonts">Fonts</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lisensi</label>
+              <select id="formProductLicense" class="form-select">
+                <option value="Premium">Premium</option>
+                <option value="Free">Free</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Price & Discount System -->
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">Harga Normal (Rp)</label>
+              <input type="number" id="formOriginalPrice" class="form-input" placeholder="Contoh: 25000" min="0"
+                required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Harga Diskon / Jual (Rp)</label>
+              <input type="number" id="formDiscountPrice" class="form-input" placeholder="Contoh: 10000" min="0"
+                required />
+              <div class="form-hint">Diskon persen otomatis dihitung jika harga jual lebih murah.</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Gambar Produk (URL atau Aset Lokal)</label>
+            <input type="text" id="formProductImage" class="form-input" placeholder="assets/patricia_west.jpg"
+              required />
+            <div class="form-hint">Contoh preset: <code>assets/patricia_west.jpg</code>,
+              <code>assets/popular_1.jpg</code>, <code>assets/popular_2.jpg</code></div>
+          </div>
+
+          <!-- Barcode / QRIS Pembayaran Khusus Produk Ini (Wajib) -->
+          <div class="form-group" style="background-color: #F8FAFC; border: 1.5px dashed #93C5FD; border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px;">
+            <label class="form-label" style="font-weight: 700; color: #1E3A8A; display: flex; align-items: center; justify-content: space-between;">
+              <span><i class="fa-solid fa-qrcode" style="color: #2563EB; margin-right: 6px;"></i> Barcode / QRIS Pembayaran Produk (Wajib)</span>
+              <span style="font-size: 0.725rem; font-weight: normal; color: #64748B;">Khusus produk ini</span>
+            </label>
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+              <input type="file" id="formProductQrisFile" accept="image/*" style="display: none;" onchange="app.handleProductQrisUpload(event)" />
+              <button type="button" class="btn-auth-pill" onclick="document.getElementById('formProductQrisFile').click()" style="font-size: 0.8rem; padding: 7px 14px;">
+                <i class="fa-solid fa-upload"></i> Unggah File Barcode QRIS
+              </button>
+              <span style="font-size: 0.75rem; color: #64748B;">atau masukkan URL:</span>
+            </div>
+            <input type="text" id="formProductQris" class="form-input" placeholder="URL gambar Barcode QRIS atau upload file di atas" required />
+            <div id="formProductQrisPreviewContainer" style="display: none; margin-top: 10px; align-items: center; gap: 12px; background: #FFFFFF; padding: 10px; border-radius: 8px; border: 1px solid #CBD5E1;">
+              <img id="formProductQrisPreview" src="" alt="Pratinjau QRIS" style="width: 60px; height: 60px; object-fit: contain; border: 1px solid #E2E8F0; border-radius: 6px;" />
+              <div>
+                <div style="font-size: 0.8rem; font-weight: 700; color: #15803D;"><i class="fa-solid fa-circle-check"></i> Barcode QRIS Produk Siap Digunakan</div>
+                <div style="font-size: 0.725rem; color: #64748B;">Pembeli produk ini akan scan barcode khusus ini saat bayar</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Deskripsi Lengkap Produk</label>
+            <textarea id="formProductDesc" class="form-textarea" rows="3"
+              placeholder="Tuliskan spesifikasi produk..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Link Akses Download File (Setelah Bayar)</label>
+            <input type="url" id="formProductFileUrl" class="form-input" placeholder="https://drive.google.com/..." />
+          </div>
+
+          <!-- Pin to Popular Items Checkbox -->
+          <div
+            style="background-color: #EFF6FF; border: 1px solid #BFDBFE; border-radius: var(--radius-md); padding: 12px; margin-bottom: 20px;">
+            <label
+              style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: #1E40AF;">
+              <input type="checkbox" id="formProductPopular"
+                style="width: 18px; height: 18px; accent-color: #2563EB;" />
+              <span>Tampilkan produk ini di bagian "Popular Items" (Featured)</span>
+            </label>
+          </div>
+
+          <div class="modal-footer" style="padding: 0; margin-top: 20px; background: none;">
+            <button type="button" class="btn-auth-pill btn-modal-close">Batal</button>
+            <button type="submit" class="btn-primary-action">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Simpan Produk</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL: PRODUCT DETAIL
+       ==================================================================== -->
+  <div class="modal-overlay" id="productDetailModal">
+    <div class="modal-container" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Detail Produk</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" id="productDetailContent">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL: CHECKOUT & QRIS PAYMENT
+       ==================================================================== -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-container qris-modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="qris_title">Pembayaran QRIS Instan</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+
+        <h4 id="checkoutProductTitle" style="font-size: 1.15rem; margin-bottom: 4px;">Product Title</h4>
+        <div style="font-size: 1.45rem; font-weight: 800; color: var(--color-primary); margin-bottom: 12px;"
+          id="checkoutProductPrice">Rp0</div>
+
+        <div class="qris-merchant-badge" id="checkoutMerchantName">ALIFIO OFFICIAL</div>
+        <p style="font-size: 0.775rem; color: #64748B;" data-i18n="qris_scan_hint">
+          Scan menggunakan BCA Mobile, GoPay, OVO, DANA, ShopeePay, atau Livin
+        </p>
+
+        <!-- Dynamic QRIS Code Image (Khusus dari masing-masing produk) -->
+        <div class="qris-image-wrapper">
+          <img id="checkoutQrisImage" src="" alt="QRIS Code" class="qris-image" />
+        </div>
+        <div style="margin-top: 6px; margin-bottom: 12px;">
+          <span id="checkoutProductQrisBadge" style="font-size: 0.75rem; color: #1D4ED8; font-weight: 700; background: #EFF6FF; border: 1px solid #BFDBFE; padding: 4px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-qrcode"></i> <span id="checkoutQrisTitleLabel">Barcode QRIS Resmi Produk</span>
+          </span>
+        </div>
+
+        <div class="qris-supported-icons">
+          <span><i class="fa-solid fa-shield-halved" style="color: #10B981;"></i> QRIS Standar Bank Indonesia</span>
+        </div>
+
+
+
+        <!-- Alternative Payments -->
+        <div class="alt-payment-buttons">
+          <div style="font-size: 0.8rem; font-weight: 700; color: #475569;" data-i18n="alt_payment_title">
+            Atau Bayar Lewat Platform Lain:
+          </div>
+          <div id="dynamicAltPaymentList">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL: PAYMENT SUCCESS & EMAIL INVOICE NOTIFICATION
+       ==================================================================== -->
+  <div class="modal-overlay" id="paymentSuccessModal">
+    <div class="modal-container" style="max-width: 500px; text-align: center;">
+      <div class="modal-body" style="padding: 32px 24px;">
+
+        <div
+          style="width: 68px; height: 68px; border-radius: 50%; background-color: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 16px;">
+          <i class="fa-solid fa-check"></i>
+        </div>
+
+        <h3 style="font-size: 1.35rem; font-weight: 800; margin-bottom: 6px;">Pembayaran Terverifikasi!</h3>
+        <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 16px;">
+          Pembayaran Anda telah sukses divalidasi oleh AI & dicatat ke sistem.
+        </p>
+
+        <!-- Email Notification Sent Alert -->
+        <div style="background-color: #EFF6FF; border: 1.5px solid #BFDBFE; border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 18px; text-align: left; display: flex; align-items: flex-start; gap: 10px;">
+          <i class="fa-solid fa-envelope-circle-check" style="color: #2563EB; font-size: 1.25rem; margin-top: 2px;"></i>
+          <div>
+            <div style="font-size: 0.825rem; font-weight: 700; color: #1E3A8A;">Notifikasi & Invoice Telah Dikirim ke Email:</div>
+            <div id="successCustomerEmailText" style="font-size: 0.85rem; font-weight: 800; color: #2563EB; font-family: monospace;">customer@email.com</div>
+            <div style="font-size: 0.725rem; color: #64748B; margin-top: 2px;">Faktur pembelian resmi beserta file unduhan langsung sudah masuk ke inbox email Anda.</div>
+          </div>
+        </div>
+
+        <!-- Trx Summary Box -->
+        <div
+          style="background-color: #F8FAFC; border: 1px solid var(--color-card-border); border-radius: var(--radius-md); padding: 14px; margin-bottom: 20px; text-align: left; font-size: 0.825rem; line-height: 1.6;">
+          <div style="display: flex; justify-content: space-between;"><span style="color: #64748B;">No. Invoice:</span> <strong id="successTrxCode" style="font-family: monospace;">TRX-0000</strong></div>
+          <div style="display: flex; justify-content: space-between;"><span style="color: #64748B;">Produk:</span> <strong id="successProductName">Nama Produk</strong></div>
+          <div style="display: flex; justify-content: space-between;"><span style="color: #64748B;">Status AI:</span> <span class="badge-ai-verified"><i class="fa-solid fa-robot"></i> Lunas (AI Verified)</span></div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <a id="successDownloadLink" href="#" target="_blank" class="btn-primary-action"
+            style="justify-content: center; height: 44px;">
+            <i class="fa-solid fa-cloud-arrow-down"></i>
+            <span>Unduh Aset Digital Sekarang</span>
+          </a>
+          <button type="button" class="btn-auth-pill" onclick="app.openInvoiceModal()" style="justify-content: center; height: 42px; border-color: #2563EB; color: #2563EB;">
+            <i class="fa-solid fa-receipt"></i>
+            <span>Lihat & Cetak Invoice Resmi (PDF)</span>
+          </button>
+          <button type="button" class="btn-auth-pill btn-modal-close" style="justify-content: center;">
+            Tutup
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- ====================================================================
+       MODAL: OFFICIAL INVOICE VIEW & PRINT
+       ==================================================================== -->
+  <div class="modal-overlay" id="invoiceModal">
+    <div class="modal-container" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-receipt" style="color: #2563EB; margin-right: 6px;"></i> Faktur / Invoice Resmi Alifio</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 20px;">
+
+        <!-- Invoice Printable Paper -->
+        <div class="invoice-container" id="printableInvoiceArea">
+          <!-- Header -->
+          <div class="invoice-header-row">
+            <div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: #2563EB; letter-spacing: -0.5px;">ALIFIO</div>
+              <div style="font-size: 0.8rem; color: #64748B;">Official Digital Asset Marketplace</div>
+              <div style="font-size: 0.75rem; color: #94A3B8; margin-top: 4px;">support@alifio.com &bull; Jakarta, Indonesia</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="invoice-stamp">LUNAS &bull; AI VERIFIED</div>
+              <div style="font-size: 0.85rem; font-weight: 800; color: #0F172A; margin-top: 8px; font-family: monospace;" id="invModalId">TRX-0000</div>
+              <div style="font-size: 0.75rem; color: #64748B;" id="invModalDate">25/10/2026</div>
+            </div>
+          </div>
+
+          <!-- Customer details -->
+          <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 0.825rem; background: #F8FAFC; padding: 12px 16px; border-radius: 8px;">
+            <div>
+              <span style="color: #64748B; font-size: 0.75rem;">DITAGIHKAN KEPADA:</span>
+              <div style="font-weight: 700; color: #1E293B; font-size: 0.95rem;" id="invModalCustomerName">Budi Santoso</div>
+              <div style="color: #475569;" id="invModalCustomerContact">budi@customer.com</div>
+            </div>
+            <div style="text-align: right;">
+              <span style="color: #64748B; font-size: 0.75rem;">METODE PEMBAYARAN:</span>
+              <div style="font-weight: 700; color: #16A34A;" id="invModalPaymentMethod">QRIS (AI Verified)</div>
+              <div style="color: #64748B; font-size: 0.75rem;">Status: <span style="color: #16A34A; font-weight: 700;">Sudah Dibayar</span></div>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <table class="invoice-table">
+            <thead>
+              <tr>
+                <th style="text-align: left;">Deskripsi Produk</th>
+                <th style="text-align: center;">Lisensi</th>
+                <th style="text-align: right;">Harga</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong id="invModalProductTitle">Patricia West - 3D Character Suite</strong>
+                  <div style="font-size: 0.75rem; color: #64748B;">Aset Digital Siap Pakai &bull; Link Download Tersedia</div>
+                </td>
+                <td style="text-align: center;" id="invModalProductLicense">Commercial</td>
+                <td style="text-align: right; font-weight: 700;" id="invModalProductPrice">Rp 10.000</td>
+              </tr>
+              <tr style="background-color: #F8FAFC;">
+                <td colspan="2" style="font-weight: 800; text-align: right; font-size: 0.95rem;">TOTAL PEMBAYARAN:</td>
+                <td style="text-align: right; font-weight: 800; font-size: 1.15rem; color: #2563EB;" id="invModalTotal">Rp 10.000</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Download Link Access Box in Invoice -->
+          <div style="background-color: #EFF6FF; border: 1px dashed #93C5FD; border-radius: 8px; padding: 14px; text-align: center; margin: 20px 0;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: #1E40AF; margin-bottom: 6px;">
+              <i class="fa-solid fa-key" style="margin-right: 4px;"></i> Akses File Digital Pembeli
+            </div>
+            <a id="invModalDownloadLink" href="#" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #2563EB; color: #FFFFFF; padding: 8px 18px; border-radius: 6px; font-weight: 700; font-size: 0.825rem; text-decoration: none;">
+              <i class="fa-solid fa-cloud-arrow-down"></i> Unduh File Aset Original
+            </a>
+          </div>
+
+          <div style="text-align: center; font-size: 0.725rem; color: #94A3B8; margin-top: 14px;">
+            Invoice ini diterbitkan secara otomatis dan sah melalui sistem verifikasi AI Alifio Digital Asset Marketplace.
+          </div>
+        </div>
+
+        <!-- Action bar -->
+        <div class="invoice-actions-bar" style="display: flex; gap: 10px; margin-top: 18px;">
+          <button type="button" class="btn-primary-action" onclick="window.print()" style="flex: 1; justify-content: center; height: 42px;">
+            <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
+          </button>
+          <button type="button" class="btn-auth-pill" onclick="app.resendInvoiceEmailNotification()" style="flex: 1; justify-content: center; height: 42px;">
+            <i class="fa-solid fa-paper-plane"></i> Kirim Ulang ke Email
+          </button>
+          <button type="button" class="btn-auth-pill btn-modal-close" style="height: 42px;">
+            Tutup
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Application Engine Script -->
+  <script src="app.js"></script>
+</body>
+
+</html>
