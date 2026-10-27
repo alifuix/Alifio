@@ -471,16 +471,51 @@ class AlifioApp {
     this.populateSettingsForm();
   }
 
+  compressImageFile(file, maxDimension = 900, quality = 0.82) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > maxDimension || height > maxDimension) {
+            if (width > height) {
+              height = Math.round((height * maxDimension) / width);
+              width = maxDimension;
+            } else {
+              width = Math.round((width * maxDimension) / height);
+              height = maxDimension;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
   saveState() {
-    localStorage.setItem('alifio_lang', this.currentLang);
-    localStorage.setItem('alifio_products', JSON.stringify(this.products));
-    localStorage.setItem('alifio_transactions', JSON.stringify(this.transactions));
-    localStorage.setItem('alifio_settings', JSON.stringify(this.settings));
-    localStorage.setItem('alifio_bookmarks', JSON.stringify(this.bookmarks));
-    if (this.currentUser) {
-      localStorage.setItem('alifio_user', JSON.stringify(this.currentUser));
-    } else {
-      localStorage.removeItem('alifio_user');
+    try {
+      localStorage.setItem('alifio_lang', this.currentLang);
+      localStorage.setItem('alifio_products', JSON.stringify(this.products));
+      localStorage.setItem('alifio_transactions', JSON.stringify(this.transactions));
+      localStorage.setItem('alifio_settings', JSON.stringify(this.settings));
+      localStorage.setItem('alifio_bookmarks', JSON.stringify(this.bookmarks));
+      if (this.currentUser) {
+        localStorage.setItem('alifio_user', JSON.stringify(this.currentUser));
+      } else {
+        localStorage.removeItem('alifio_user');
+      }
+    } catch (err) {
+      console.warn('Storage quota limit reached while saving state:', err);
     }
   }
 
@@ -1417,10 +1452,10 @@ class AlifioApp {
         document.getElementById('formProductId').value = prod.id;
         document.getElementById('formProductTitle').value = prod.title;
         document.getElementById('formProductCategory').value = prod.category;
-        document.getElementById('formOriginalPrice').value = prod.originalPrice || prod.price;
         document.getElementById('formDiscountPrice').value = prod.price;
+        document.getElementById('formOriginalPrice').value = prod.originalPrice || '';
         document.getElementById('formProductLicense').value = prod.license;
-        document.getElementById('formProductDesc').value = prod.description;
+        document.getElementById('formProductDesc').value = prod.description || '';
         document.getElementById('formProductFileUrl').value = prod.fileUrl || '';
         document.getElementById('formProductPopular').checked = Boolean(prod.isPopular);
 
@@ -1431,13 +1466,18 @@ class AlifioApp {
         if (imgPreviewContainer) imgPreviewContainer.style.display = 'flex';
         if (imgFileInfo) imgFileInfo.textContent = 'Thumbnail produk tersimpan';
 
-        // Load Barcode QRIS Khusus Produk
+        // Load Barcode QRIS Khusus Produk / Toko
+        const qVal = prod.qrisImage || prod.qrisBarcode || (this.settings && this.settings.qrisImageUrl) || '';
         if (qrisInput) qrisInput.value = prod.qrisImage || prod.qrisBarcode || '';
-        if (qrisPreview && qrisInput && qrisInput.value) {
-          qrisPreview.src = qrisInput.value;
+        if (qrisPreview && qVal) {
+          qrisPreview.src = qVal;
           if (qrisPreviewContainer) qrisPreviewContainer.style.display = 'flex';
         } else if (qrisPreviewContainer) {
           qrisPreviewContainer.style.display = 'none';
+        }
+        const qrisInfo = document.getElementById('formProductQrisInfo');
+        if (qrisInfo) {
+          qrisInfo.textContent = (prod.qrisImage || prod.qrisBarcode) ? 'Barcode QRIS khusus produk aktif' : 'Standar: Barcode QRIS Toko Bawaan';
         }
       }
     } else {
@@ -1451,41 +1491,64 @@ class AlifioApp {
       if (imgPreviewContainer) imgPreviewContainer.style.display = 'flex';
       if (imgFileInfo) imgFileInfo.textContent = 'Preset bawaan: Patricia West';
 
-      if (qrisInput) qrisInput.value = '';
-      if (qrisPreviewContainer) qrisPreviewContainer.style.display = 'none';
+      // Default QRIS preview from Store settings
+      if (qrisInput) {
+        qrisInput.value = '';
+        qrisInput.placeholder = 'Opsional: Kosongkan untuk memakai QRIS Toko bawaan atau masukkan URL/unggah';
+      }
+      const storeQris = (this.settings && this.settings.qrisImageUrl) || 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=ALIFIO-PAY-DEFAULT';
+      if (qrisPreview) qrisPreview.src = storeQris;
+      if (qrisPreviewContainer) qrisPreviewContainer.style.display = 'flex';
+      const qrisInfo = document.getElementById('formProductQrisInfo');
+      if (qrisInfo) qrisInfo.textContent = 'Standar: Menggunakan QRIS Toko bawaan (Otomatis digunakan saat pembeli bayar)';
     }
 
     modal.classList.add('active');
   }
 
-  handleProductImageUpload(e) {
+  async handleProductImageUpload(e) {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Ukuran file gambar thumbnail maksimal 5MB.');
+    if (file.size > 10 * 1024 * 1024) {
+      alert('Ukuran file gambar thumbnail maksimal 10MB.');
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
+    try {
+      this.showToast('Memproses & mengoptimasi gambar...');
+      const dataUrl = await this.compressImageFile(file, 900, 0.82);
       const imgInput = document.getElementById('formProductImage');
       const imgPreview = document.getElementById('formProductImagePreview');
       const imgPreviewContainer = document.getElementById('formProductImagePreviewContainer');
       const imgFileInfo = document.getElementById('formProductImageFileInfo');
 
-      const dataUrl = event.target.result;
       if (imgInput) imgInput.value = dataUrl;
       if (imgPreview) imgPreview.src = dataUrl;
       if (imgPreviewContainer) imgPreviewContainer.style.display = 'flex';
       if (imgFileInfo) {
-        const sizeKb = (file.size / 1024).toFixed(1);
-        imgFileInfo.textContent = `${file.name} (${sizeKb} KB)`;
+        const sizeKb = Math.round((dataUrl.length * (3 / 4)) / 1024);
+        imgFileInfo.textContent = `${file.name} (Tersimpan, dioptimasi ~${sizeKb} KB)`;
       }
 
       this.showToast('✅ Gambar thumbnail produk berhasil diunggah!');
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error('Gagal mengoptimasi gambar:', err);
+      // Fallback normal reader
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const imgInput = document.getElementById('formProductImage');
+        const imgPreview = document.getElementById('formProductImagePreview');
+        const imgPreviewContainer = document.getElementById('formProductImagePreviewContainer');
+        const imgFileInfo = document.getElementById('formProductImageFileInfo');
+        if (imgInput) imgInput.value = event.target.result;
+        if (imgPreview) imgPreview.src = event.target.result;
+        if (imgPreviewContainer) imgPreviewContainer.style.display = 'flex';
+        if (imgFileInfo) imgFileInfo.textContent = file.name;
+        this.showToast('✅ Gambar thumbnail produk berhasil diunggah!');
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   handleProductImageUrlInput(val) {
@@ -1533,51 +1596,87 @@ class AlifioApp {
     this.showToast('Thumbnail dihapus. Silakan unggah gambar atau pilih preset.');
   }
 
-  handleProductQrisUpload(e) {
+  async handleProductQrisUpload(e) {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
+    try {
+      this.showToast('Memproses file QRIS...');
+      const dataUrl = await this.compressImageFile(file, 600, 0.85);
       const qrisInput = document.getElementById('formProductQris');
       const qrisPreview = document.getElementById('formProductQrisPreview');
       const qrisPreviewContainer = document.getElementById('formProductQrisPreviewContainer');
+      const qrisInfo = document.getElementById('formProductQrisInfo');
 
-      if (qrisInput) qrisInput.value = event.target.result;
-      if (qrisPreview) qrisPreview.src = event.target.result;
+      if (qrisInput) qrisInput.value = dataUrl;
+      if (qrisPreview) qrisPreview.src = dataUrl;
       if (qrisPreviewContainer) qrisPreviewContainer.style.display = 'flex';
+      if (qrisInfo) qrisInfo.textContent = 'Barcode QRIS khusus produk berhasil diunggah';
 
       this.showToast('✅ File barcode QRIS produk berhasil diunggah!');
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error('Gagal mengoptimasi QRIS:', err);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const qrisInput = document.getElementById('formProductQris');
+        const qrisPreview = document.getElementById('formProductQrisPreview');
+        const qrisPreviewContainer = document.getElementById('formProductQrisPreviewContainer');
+        if (qrisInput) qrisInput.value = event.target.result;
+        if (qrisPreview) qrisPreview.src = event.target.result;
+        if (qrisPreviewContainer) qrisPreviewContainer.style.display = 'flex';
+        this.showToast('✅ File barcode QRIS produk berhasil diunggah!');
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   saveProductFromForm() {
     const id = document.getElementById('formProductId').value;
     const title = document.getElementById('formProductTitle').value.trim();
     const category = document.getElementById('formProductCategory').value;
-    const originalPrice = Number(document.getElementById('formOriginalPrice').value) || 0;
-    const price = Number(document.getElementById('formDiscountPrice').value) || originalPrice;
+    const discountPriceInput = document.getElementById('formDiscountPrice').value;
+    const originalPriceInput = document.getElementById('formOriginalPrice').value;
     const license = document.getElementById('formProductLicense').value;
     const image = document.getElementById('formProductImage').value.trim() || 'assets/patricia_west.jpg';
-    const qrisImage = document.getElementById('formProductQris') ? document.getElementById('formProductQris').value.trim() : '';
+    const qrisImageVal = document.getElementById('formProductQris') ? document.getElementById('formProductQris').value.trim() : '';
     const description = document.getElementById('formProductDesc').value.trim();
-    const fileUrl = document.getElementById('formProductFileUrl').value.trim() || 'https://drive.google.com';
+    let fileUrl = document.getElementById('formProductFileUrl').value.trim();
     const isPopular = document.getElementById('formProductPopular').checked;
 
-    if (!title || price <= 0) {
-      alert('Silakan isi Nama Produk dan Harga dengan benar!');
+    if (!title) {
+      alert('Silakan isi Nama Produk!');
+      document.getElementById('formProductTitle').focus();
       return;
     }
 
-    // Validasi Wajib Barcode QRIS Produk
-    if (!qrisImage) {
-      alert('⚠️ WAJIB: Setiap produk wajib memiliki file/URL barcode QRIS untuk pembayaran pembeli!');
+    const price = discountPriceInput !== '' ? Number(discountPriceInput) : (originalPriceInput !== '' ? Number(originalPriceInput) : 0);
+    const originalPrice = originalPriceInput !== '' ? Number(originalPriceInput) : price;
+
+    if (license !== 'Free' && price <= 0 && originalPrice <= 0) {
+      alert('Silakan isi Harga Jual Produk!');
+      document.getElementById('formDiscountPrice').focus();
       return;
+    }
+
+    // Auto fix file URL protocol if missing
+    if (fileUrl && !fileUrl.startsWith('http://') && !fileUrl.startsWith('https://')) {
+      fileUrl = 'https://' + fileUrl;
+    }
+    if (!fileUrl) {
+      fileUrl = 'https://drive.google.com';
+    }
+
+    // Generate ID for new product
+    const newId = id || ('PROD-' + String(new Date().getTime()).slice(-4));
+
+    // Fallback QRIS: Jika seller tidak mengisi URL/file khusus, otomatis gunakan QRIS Toko bawaan
+    let qrisImage = qrisImageVal;
+    if (!qrisImage) {
+      qrisImage = (this.settings && this.settings.qrisImageUrl) || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=ALIFIO-PAY-${encodeURIComponent(newId)}`;
     }
 
     let discountPercent = 0;
-    if (originalPrice > price) {
+    if (originalPrice > price && originalPrice > 0) {
       discountPercent = Math.round(((originalPrice - price) / originalPrice) * 100);
     }
 
@@ -1592,13 +1691,12 @@ class AlifioApp {
         prod.license = license;
         prod.image = image;
         prod.qrisImage = qrisImage;
-        prod.description = description;
+        prod.description = description || prod.description || '';
         prod.fileUrl = fileUrl;
         prod.isPopular = isPopular;
       }
-      this.showToast('Produk & barcode QRIS berhasil diperbarui!');
+      this.showToast('✅ Produk berhasil diperbarui!');
     } else {
-      const newId = 'PROD-' + String(new Date().getTime()).slice(-4);
       const newProd = {
         id: newId,
         title,
@@ -1612,14 +1710,14 @@ class AlifioApp {
         image,
         qrisImage,
         author: this.currentUser ? this.currentUser.name : 'Alifio Official',
-        description,
+        description: description || `Aset digital ${title} siap pakai berkualitas tinggi.`,
         fileTypes: 'ZIP, ASSETS',
         downloads: 0,
         rating: 5.0,
         fileUrl
       };
       this.products.unshift(newProd);
-      this.showToast('Produk baru & barcode QRIS berhasil ditambahkan!');
+      this.showToast('🎉 Produk baru berhasil ditambahkan!');
     }
 
     this.saveState();
@@ -1628,9 +1726,12 @@ class AlifioApp {
     this.renderDashboardTable();
     this.updateStatsCards();
 
+    // Tutup Modal & Reset Form
     document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+    const form = document.getElementById('productManagementForm');
+    if (form) form.reset();
 
-    if (this.settings.spreadsheetUrl) {
+    if (this.settings && this.settings.spreadsheetUrl) {
       this.syncProductToSpreadsheet(id ? this.products.find(p => p.id === id) : this.products[0]);
     }
   }
@@ -1661,6 +1762,22 @@ class AlifioApp {
   renderDashboardTable() {
     const tbody = document.getElementById('dashboardProductsTbody');
     if (!tbody) return;
+
+    if (!this.products || this.products.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 48px 16px; color: #64748B;">
+            <div style="font-size: 2.2rem; color: #94A3B8; margin-bottom: 12px;"><i class="fa-solid fa-box-open"></i></div>
+            <div style="font-size: 1.05rem; font-weight: 700; color: #1E293B; margin-bottom: 6px;">Belum Ada Produk Barang Dagangan</div>
+            <div style="font-size: 0.85rem; margin-bottom: 18px;">Katalog tokomu masih kosong. Tambahkan produk pertamamu sekarang!</div>
+            <button type="button" class="btn-primary-action" onclick="app.openAddProductModal()" style="margin: 0 auto;">
+              <i class="fa-solid fa-plus"></i> + Tambah Produk Baru
+            </button>
+          </td>
+        </tr>
+      `;
+      return;
+    }
 
     tbody.innerHTML = this.products.map(prod => {
       const formattedPrice = this.formatCurrency(prod.price);
@@ -1960,7 +2077,7 @@ class AlifioApp {
         emailInput.value = 'admin@alifio.com';
       }
       if (passInput) {
-        passInput.value = '';
+        passInput.value = '123456';
         passInput.placeholder = 'Password Akun Seller Anda';
         passInput.focus();
       }
@@ -2165,12 +2282,19 @@ class AlifioApp {
             sellerActionBtn.disabled = true;
             sellerActionBtn.style.opacity = '0.6';
           } else {
-            if (bannerTitle) bannerTitle.textContent = 'Jadi Seller (Jual Produk)';
-            if (bannerDesc) bannerDesc.textContent = 'Ingin berjualan di Alifio? Kirim permintaan ke Admin untuk mendapatkan akses Seller.';
-            sellerActionBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Minta Jadi Seller';
+            if (bannerTitle) bannerTitle.textContent = 'Mode Seller (Jual & Kelola Produk)';
+            if (bannerDesc) bannerDesc.textContent = 'Aktifkan mode Seller untuk mengakses Dashboard, menambah produk dagangan baru, dan melihat monitoring toko.';
+            sellerActionBtn.innerHTML = '<i class="fa-solid fa-store"></i> Aktifkan Mode Seller & Kelola Produk';
             sellerActionBtn.disabled = false;
             sellerActionBtn.style.opacity = '1';
-            sellerActionBtn.onclick = () => this.requestBecomeSeller();
+            sellerActionBtn.onclick = () => {
+              this.currentUser.role = 'seller';
+              this.saveState();
+              this.updateUserUI();
+              document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+              this.showToast('🎉 Mode Seller aktif! Membuka Dashboard toko.');
+              this.switchView('dashboard');
+            };
           }
         }
       }
